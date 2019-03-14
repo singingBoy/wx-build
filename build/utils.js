@@ -13,8 +13,11 @@ export function getEntries(jsFiles, cwd) {
   const entries = {};
   console.log(jsFiles, 999)
   jsFiles.forEach(path => {
-    console.log(path.split('.')[0])
     entries[path.split('.')[0]] = join(cwd, path);
   });
   return entries;
+}
+
+export function readJson(path) {
+
 }
