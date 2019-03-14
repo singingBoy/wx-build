@@ -1,0 +1,16 @@
+.DS_Store
+dist/
+.idea/
+npm-debug.log
+selenium-debug.log
+test/unit/coverage
+test/e2e/reports
+node_modules/
+node_modules
+.vscode/
+jsconfig.json
+globals.d.ts
+download/
+logs/
+
+.eslintrc.js
