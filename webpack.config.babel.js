@@ -1,11 +1,12 @@
 import webpack from 'webpack';
 import {resolve, join} from 'path';
-import {getFiles, getEntries} from './build/utils';
+import {getFiles, getEntries, translateJson} from './build/utils';
 
 const src = resolve(__dirname, 'src');
 const dist = resolve(__dirname, 'dist');
 const jsFiles = getFiles('**/*.js', src);
 console.log(getEntries(jsFiles, src));
+translateJson(src);
 
 export default {
   entry: getEntries(jsFiles, src),
