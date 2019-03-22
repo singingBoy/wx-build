@@ -3,6 +3,9 @@
     "pages/index/index",
     "pages/logs/logs"
   ],
+  "usingComponents": {
+    "nav-bar": "components/nav_bar/nav_bar"
+  },
   "window":{
     "backgroundTextStyle":"light",
     "navigationBarBackgroundColor": "#fff",
