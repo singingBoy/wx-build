@@ -1,5 +1,5 @@
 import fs from 'fs';
-import {reslove, join} from 'path';
+import {resolve, join, parse} from 'path';
 import glob from 'glob';
 
 /**
@@ -38,32 +38,46 @@ export function readJson(jsonPath) {
   return JSON.parse(fs.readFileSync(jsonPath));
 }
 
+/**
+ * 获取
+ */
+const pagesKey = ['pages'],
+    subPagesKey = ['subpackages'],
+    componentKey = ['usingComponents'];
 function handleJson(cwd, pattern) {
-  const pagesKey = ['pages', 'subpackages'];
-  const componentKey = ['usingComponents'];
-  const appJson = getFiles(pattern, cwd, null, true)[0];
-  const pages = [], components = [];
-  Object.entries(readJson(appJson)).forEach(([key, value]) => {
+  const pages = [], components = [], subPages = [];
+  const json = getFiles(pattern, cwd, null, true)[0];
+  Object.entries(readJson(json)).forEach(([key, value]) => {
     // 页面js
     if(pagesKey.includes(key)){
       value.forEach(val => {
         if (!pages.includes(val)) {
-          pages.push(val);
+          pages.push(join(cwd, val));
         }
+      })
+    }
+    // 分页js
+    if (subPagesKey.includes(key)) {
+      value.forEach(val => {
+        const {root, pages = []} = val;
+        pages.forEach(page => {
+          subPages.push(join(cwd, root, page));
+        })
       })
     }
     // 全局组件js
     if (componentKey.includes(key)) {
       Object.values(value).forEach(comp => {
         if(!components.includes(comp)) {
-          components.push(comp);
+          components.push(join(cwd, comp));
         }
       });
     }
   });
   return {
-    pages,
-    components,
+    ...pages,
+    ...subPages,
+    ...components
   };
 }
 
@@ -73,14 +87,18 @@ function handleJson(cwd, pattern) {
  * @param gComponents 全局组件
  */
 function handleComponentJson(cwd, pages, gComponents) {
+  const _allComponents = new Set();
   const jsonPaths = [...pages, ...gComponents];
-  console.log('**********************')
-  console.log(jsonPaths);
   jsonPaths.forEach(path => {
-
-    // const {components} = handleJson(cwd, `${path}/${path.split('/')}`)
+    const componentBase = parse(path).dir;
+    const {components} = handleJson(cwd, `${path}.json`);
+    if (components.length) {
+      components.forEach(comp => {
+        console.log(222, cwd, resolve(componentBase, comp))
+      })
+    }
+    console.log('**********************')
   })
-  console.log('**********************')
 }
 
 export function translateJson(cwd) {

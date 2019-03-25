@@ -1,0 +1,12 @@
+<!--logs.wxml-->
+<view class="container log-list">
+  <nav background="#fff" fixed="{{true}}">
+    <view slot="content" class="d-flex">
+      <view class="iconfont icon-back" bindtap="navigateBack"/>
+      <view>日志</view>
+    </view>
+  </nav>
+  <block wx:for="{{logs}}" wx:for-item="log">
+    <text class="log-item">{{index + 1}}. {{log}}</text>
+  </block>
+</view>

@@ -50,5 +50,10 @@ Page({
       userInfo: e.detail.userInfo,
       hasUserInfo: true
     })
-  }
+  },
+  navigateOther() {
+    wx.navigateTo({
+      url: '/pages_other/other/other'
+    })
+  },
 })

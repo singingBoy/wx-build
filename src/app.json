@@ -6,6 +6,14 @@
   "usingComponents": {
     "nav-bar": "components/nav_bar/nav_bar"
   },
+  "subpackages": [
+    {
+      "root": "pages_other",
+      "pages": [
+        "other/other"
+      ]
+    }
+  ],
   "window":{
     "backgroundTextStyle":"light",
     "navigationBarBackgroundColor": "#fff",
