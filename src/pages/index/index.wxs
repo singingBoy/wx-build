@@ -1,0 +1,11 @@
+const arr = [1,2,3];
+
+const splitArr = function() {
+  arr.map(a => console.log(a));
+  return arr.toString();
+};
+
+module.exports = {
+  arr,
+  splitArr,
+};

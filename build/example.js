@@ -443,6 +443,7 @@ export default class WXAppPlugin {
 	async run(compiler) {
 		this.base = this.getBase(compiler);
 		this.entryResources = await this.getEntryResource();
+
 		compiler.plugin('compilation', ::this.toModifyTemplate);
 		this.compileScripts(compiler);
 		await this.compileAssets(compiler);

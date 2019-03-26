@@ -1,5 +1,6 @@
 //index.js
 //获取应用实例
+import { formatTime } from '../../utils/util';
 const app = getApp();
 
 Page({
@@ -7,7 +8,9 @@ Page({
     motto: 'Hello World',
     userInfo: {},
     hasUserInfo: false,
-    canIUse: wx.canIUse('button.open-type.getUserInfo')
+    canIUse: wx.canIUse('button.open-type.getUserInfo'),
+    test: new Set([1,2,3]),
+    date: formatTime(new Date()),
   },
   //事件处理函数
   bindViewTap: function() {
