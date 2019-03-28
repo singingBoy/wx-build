@@ -1,7 +1,7 @@
-const arr = [1,2,3];
+let arr = [1,2,3];
 
 const splitArr = function() {
-  arr.map(a => console.log(a));
+  arr = arr.map(a => a + 1);
   return arr.toString();
 };
 

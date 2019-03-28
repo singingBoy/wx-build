@@ -4,7 +4,7 @@
   <nav-bar background="#fff" fixed="{{true}}">
     <view slot="content" class="d-flex">
       <view class="iconfont icon-back" bindtap="navigateBack"/>
-      <view>首页2</view>
+      <view>首页{{WXS.splitArr()}}</view>
     </view>
   </nav-bar>
   <view class="userinfo">

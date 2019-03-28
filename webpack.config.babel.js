@@ -1,10 +1,13 @@
 import webpack from 'webpack';
 import MultiEntryPlugin from 'webpack/lib/MultiEntryPlugin';
+import OptimizeCSSAssetsPlugin from 'optimize-css-assets-webpack-plugin';
+import MiniCssExtractPlugin from 'mini-css-extract-plugin';
 import {resolve, join} from 'path';
 import {getEntries, getChunkFiles} from './build/utils';
 
 const src = resolve(__dirname, 'src');
 const dist = resolve(__dirname, 'dist');
+const PROD = process.env.mode === 'production';
 
 const createFileLoader = (ext = '[ext]') => {
   return {
@@ -51,11 +54,35 @@ export default {
         ],
       },
       {
-        test: /\.wxss$/,
+        test: /\.(scss|wxss|sass)$/,
         include: /src/,
         exclude: /node_modules/,
         use: [
-          createFileLoader(),
+          // MiniCssExtractPlugin.loader,
+          // 'css-loader',
+          createFileLoader('wxss'),
+          {
+            loader: 'sass-loader',
+            options: {
+              includePaths: [src],
+            },
+          },
+        ],
+      },
+      {
+        test: /\.less$/,
+        include: /src/,
+        exclude: /node_modules/,
+        use: [
+          // MiniCssExtractPlugin.loader,
+          // 'css-loader',
+          createFileLoader('wxss'),
+          {
+            loader: 'less-loader',
+            options: {
+              includePaths: [src],
+            },
+          },
         ],
       },
       {
@@ -74,19 +101,26 @@ export default {
     extensions: ['.js', '.json'],
   },
   plugins: [
+    new MiniCssExtractPlugin({
+      filename: "common23.css",
+    }),
+    // new webpack.optimize.LimitChunkCountPlugin({maxChunks: 2}),
     new MultiEntryPlugin(src, [
-        ...getChunkFiles(src, '**/*.wxs'),
-        ...getChunkFiles(src, '**/*.wxml'),
-        ...getChunkFiles(src, '**/*.json'),
-        ...getChunkFiles(src, '**/*.wxss'),
+      ...getChunkFiles(src, '**/*.wxs'),
+      ...getChunkFiles(src, '**/*.wxml'),
+      ...getChunkFiles(src, '**/*.json'),
+      ...getChunkFiles(src, "**/*.+(wxss|scss|sass|less)"),
     ], 'vent'),
     new webpack.DefinePlugin({}),
-    new webpack.optimize.LimitChunkCountPlugin({maxChunks: 2}),
   ],
   optimization: {
-    minimize: process.env.mode === 'production',
+    minimize: PROD,
+    splitChunks: {
+      minChunks: 1,
+      name: 'common2',
+    }
   },
-  devtool: process.env.mode === 'development' ? 'nosources-source-map' : false, // source map for js
+  devtool: PROD ? false : 'nosources-source-map', // source map for js
   performance: {
     hints: 'warning',
     assetFilter: assetFilename => assetFilename.endsWith('.js')
