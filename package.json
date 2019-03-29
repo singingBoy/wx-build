@@ -5,7 +5,8 @@
   "main": "src/app.js",
   "scripts": {
     "start": "cross-env mode=development webpack --display-modules",
-    "build": "cross-env mode=production webpack --watch"
+    "build": "cross-env mode=production webpack",
+    "watch": "cross-env mode=development webpack --watch"
   },
   "keywords": [
     "微信、webpack、构建工具"
@@ -38,6 +39,9 @@
     "node-sass": "^4.11.0",
     "optimize-css-assets-webpack-plugin": "^5.0.1",
     "sass-loader": "^7.1.0",
+    "terser-webpack-plugin": "^1.2.3",
+    "uglify-js": "^3.5.2",
+    "uglifyjs-webpack-plugin": "^2.1.2",
     "webpack": "^4.29.6",
     "webpack-cli": "^3.2.3"
   }

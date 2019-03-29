@@ -1,8 +1,10 @@
 import webpack from 'webpack';
+import {resolve, join} from 'path';
 import MultiEntryPlugin from 'webpack/lib/MultiEntryPlugin';
 import OptimizeCSSAssetsPlugin from 'optimize-css-assets-webpack-plugin';
+import TerserPlugin from 'terser-webpack-plugin';
 import MiniCssExtractPlugin from 'mini-css-extract-plugin';
-import {resolve, join} from 'path';
+import UglifyJsPlugin from 'uglifyjs-webpack-plugin';
 import {getEntries, getChunkFiles} from './build/utils';
 
 const src = resolve(__dirname, 'src');
@@ -40,8 +42,8 @@ export default {
         include: /src/,
         exclude: /node_modules/,
         use: [
-          createFileLoader(),
           'babel-loader',
+          createFileLoader(),
           // 'eslint-loader',
         ],
       },
@@ -64,7 +66,7 @@ export default {
           {
             loader: 'sass-loader',
             options: {
-              includePaths: [src],
+              includePaths: [resolve('src', 'styles'), src],
             },
           },
         ],
@@ -80,7 +82,7 @@ export default {
           {
             loader: 'less-loader',
             options: {
-              includePaths: [src],
+              includePaths: [resolve('src', 'styles'), src],
             },
           },
         ],
@@ -101,24 +103,37 @@ export default {
     extensions: ['.js', '.json'],
   },
   plugins: [
-    new MiniCssExtractPlugin({
-      filename: "common23.css",
-    }),
-    // new webpack.optimize.LimitChunkCountPlugin({maxChunks: 2}),
+    new webpack.optimize.LimitChunkCountPlugin({maxChunks: 2}),
     new MultiEntryPlugin(src, [
       ...getChunkFiles(src, '**/*.wxs'),
       ...getChunkFiles(src, '**/*.wxml'),
       ...getChunkFiles(src, '**/*.json'),
       ...getChunkFiles(src, "**/*.+(wxss|scss|sass|less)"),
     ], 'vent'),
+    // minify js
+    new TerserPlugin({
+      exclude: /node_modules/,
+      minify: (file, sourceMap) => {
+        // https://github.com/mishoo/UglifyJS2#minify-options
+        return require('uglify-js').minify(file, {
+          compress: {
+            drop_console: true
+          },
+        });
+      },
+    }),
     new webpack.DefinePlugin({}),
   ],
   optimization: {
-    minimize: PROD,
-    splitChunks: {
-      minChunks: 1,
-      name: 'common2',
-    }
+    minimizer: [
+      // minify style
+      new OptimizeCSSAssetsPlugin({
+        assetNameRegExp: /\.(scss|wxss|sass|less)$/,
+        cssProcessor: require('cssnano'),
+        cssProcessorOptions: {discardComments: {removeAll: true}},
+        canPrint: true
+      }),
+    ],
   },
   devtool: PROD ? false : 'nosources-source-map', // source map for js
   performance: {
