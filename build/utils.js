@@ -40,16 +40,17 @@ export function getChunkFiles(cwd, pattern) {
  * read json file & return object
  * @param jsonPath
  */
-function readJson(jsonPath) {
+export function readJson(jsonPath) {
   return readJsonSync(jsonPath);
 }
 
-function clear(path = 'dist') {
+export function clear(path = 'dist') {
   removeSync(path)
 }
 
 
 function getComponents(cwd, components, path) {
+  clear();
   const {usingComponents = {}} = readJson(`${path}.json`);
   const componentBase = parse(path).dir;
 
@@ -64,10 +65,7 @@ function getComponents(cwd, components, path) {
   });
 }
 
-function getEntryResource(cwd) {
-  clear();
-  console.log('clear ------- dist --------');
-
+export function getEntryResource(cwd) {
   const appJSONFile = resolve(cwd, 'app.json');
   const {pages = [], subpackages = [], usingComponents, tabBar = {},} = readJson(appJSONFile);
   const components = new Set();

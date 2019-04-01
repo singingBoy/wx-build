@@ -5,7 +5,7 @@ import OptimizeCSSAssetsPlugin from 'optimize-css-assets-webpack-plugin';
 import TerserPlugin from 'terser-webpack-plugin';
 import MiniCssExtractPlugin from 'mini-css-extract-plugin';
 import UglifyJsPlugin from 'uglifyjs-webpack-plugin';
-import {getEntries, getChunkFiles} from './build/utils';
+import {getEntries, getChunkFiles, clear, getEntryResource} from './build/utils';
 
 const src = resolve(__dirname, 'src');
 const dist = resolve(__dirname, 'dist');
@@ -21,7 +21,7 @@ const createFileLoader = (ext = '[ext]') => {
   };
 };
 
-export default {
+const webpackConfig = {
   entry: getEntries(src),
   output: {
     path: dist,
@@ -42,8 +42,12 @@ export default {
         include: /src/,
         exclude: /node_modules/,
         use: [
-          'babel-loader',
           createFileLoader(),
+          {
+            loader: './build/loader/wxs-loader',
+            options: { isDebug: PROD }
+          },
+          'babel-loader',
           // 'eslint-loader',
         ],
       },
@@ -76,8 +80,6 @@ export default {
         include: /src/,
         exclude: /node_modules/,
         use: [
-          // MiniCssExtractPlugin.loader,
-          // 'css-loader',
           createFileLoader('wxss'),
           {
             loader: 'less-loader',
@@ -94,6 +96,10 @@ export default {
         exclude: /node_modules/,
         use: [
           createFileLoader(),
+          {
+            loader: './build/loader/json-loader',
+            options: { isDebug: PROD }
+          }
         ],
       },
     ],
@@ -110,18 +116,6 @@ export default {
       ...getChunkFiles(src, '**/*.json'),
       ...getChunkFiles(src, "**/*.+(wxss|scss|sass|less)"),
     ], 'vent'),
-    // minify js
-    new TerserPlugin({
-      exclude: /node_modules/,
-      minify: (file, sourceMap) => {
-        // https://github.com/mishoo/UglifyJS2#minify-options
-        return require('uglify-js').minify(file, {
-          compress: {
-            drop_console: true
-          },
-        });
-      },
-    }),
     new webpack.DefinePlugin({}),
   ],
   optimization: {
@@ -142,4 +136,21 @@ export default {
   },
   target: 'node',
   mode: process.env.mode,
-}
+};
+
+PROD ? webpackConfig.plugins.push(
+    new TerserPlugin({
+      exclude: /node_modules/,
+      minify: (file, sourceMap) => {
+        // https://github.com/mishoo/UglifyJS2#minify-options
+        return require('uglify-js').minify(file, {
+          compress: {
+            drop_console: true
+          },
+        });
+      },
+    })
+) : null;
+
+
+export default webpackConfig;

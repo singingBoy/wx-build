@@ -12,7 +12,7 @@
 
 -[ ] app.json.js to app.json
 
--[ ] .json、.wxml、.wxs、.wxss、.scss…… minimize
+-[x] .json、.wxml、.wxs、.wxss、.scss…… minimize
 
 -[x] .js 去除 console、debugger、注释等符号
 
