@@ -12,7 +12,7 @@ App({
         // 发送 res.code 到后台换取 openId, sessionKey, unionId
         if (res) {
           this.login = true;
-          console.log(1111)
+          console.log([...[1,2,3]])
         }
       }
     });

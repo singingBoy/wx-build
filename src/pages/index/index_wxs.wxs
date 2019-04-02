@@ -1,10 +1,7 @@
-import {formatNumber} from '../../utils/util';
-
 let arr = [1,2,3];
 
-const splitArr = function() {
+const splitArr = () => {
   arr = arr.map(a => a + 1);
-  formatNumber(1);
   return arr.toString();
 };
 

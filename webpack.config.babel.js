@@ -3,8 +3,6 @@ import {resolve, join} from 'path';
 import MultiEntryPlugin from 'webpack/lib/MultiEntryPlugin';
 import OptimizeCSSAssetsPlugin from 'optimize-css-assets-webpack-plugin';
 import TerserPlugin from 'terser-webpack-plugin';
-import MiniCssExtractPlugin from 'mini-css-extract-plugin';
-import UglifyJsPlugin from 'uglifyjs-webpack-plugin';
 import {getEntries, getChunkFiles, clear, getEntryResource} from './build/utils';
 
 const src = resolve(__dirname, 'src');
@@ -64,8 +62,6 @@ const webpackConfig = {
         include: /src/,
         exclude: /node_modules/,
         use: [
-          // MiniCssExtractPlugin.loader,
-          // 'css-loader',
           createFileLoader('wxss'),
           {
             loader: 'sass-loader',

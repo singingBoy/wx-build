@@ -20,6 +20,8 @@
 
 -[ ] delete useless build file
 
--[ ] build delete console、delete annotation
+-[x] build delete console、delete annotation
 
 -[ ] px to rpx
+
+-[ ] 去除css中多余class

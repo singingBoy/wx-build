@@ -4,7 +4,7 @@ import {transform} from 'es3ify';
 
 module.exports = function (source) {
   const { isDebug } = getOptions(this) || {};
-  let context = source; //transformToEs3(source);
+  let context = transformToEs3(source);
   if (isDebug) {
     context = `${minifyJs(source)}`;
   }

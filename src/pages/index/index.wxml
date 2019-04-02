@@ -1,5 +1,5 @@
 <!--index.wxml-->
-<wxs module="WXS" src="./index.wxs" />
+<wxs module="WXS" src="./index_wxs.wxs" />
 <view class="container">
   <nav-bar background="#fff" fixed="{{true}}">
     <view slot="content" class="d-flex">
